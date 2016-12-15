@@ -1,3 +1,6 @@
+//https://unsigned.io/forum/viewtopic.php?id=2&p=1
+//mix and match from different sources.
+
 //Adafruit and SPI libraries
 #include <SPI.h>
 #include <Adafruit_GFX.h>
