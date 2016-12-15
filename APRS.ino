@@ -7,7 +7,7 @@
 #include <Adafruit_ILI9341.h>
 #include <LibAPRS.h>
 #include <TinyGPS++.h>
-//#include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 
 
 static const int RXPin = 2, TXPin = 3;
@@ -17,7 +17,7 @@ TinyGPSPlus gps;
 
 
 // The serial connection to the GPS device
-//SoftwareSerial ss(RXPin, TXPin);
+SoftwareSerial ss(RXPin, TXPin);
 
 
 
@@ -55,7 +55,7 @@ void setup(){
  
   // The serial connection to the display
 //  SoftwareSerial ss(RXPin, TXPin);
- // ss.begin(GPSBaud);
+  ss.begin(GPSBaud);
   pinMode(buttonPin, INPUT);
   Serial.begin(9600);
   Serial.println(F("AT+DMOSETGROUP=0,144.8000,144.8000,0000,0,0000"));
@@ -117,9 +117,9 @@ void loop(){
     }
   }
 
-  while (Serial.available() > 0)
+  while (ss.available() > 0)
   {
-    gps.encode(Serial.read());
+    gps.encode(ss.read());
   }
 
   if ( gps.time.isUpdated() )
