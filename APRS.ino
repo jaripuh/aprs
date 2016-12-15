@@ -7,7 +7,7 @@
 #include <Adafruit_ILI9341.h>
 #include <LibAPRS.h>
 #include <TinyGPS++.h>
-#include <SoftwareSerial.h>
+//#include <SoftwareSerial.h>
 
 
 static const int RXPin = 2, TXPin = 3;
@@ -17,7 +17,7 @@ TinyGPSPlus gps;
 
 
 // The serial connection to the GPS device
-SoftwareSerial ss(RXPin, TXPin);
+//SoftwareSerial ss(RXPin, TXPin);
 
 
 
@@ -55,7 +55,7 @@ void setup(){
  
   // The serial connection to the display
 //  SoftwareSerial ss(RXPin, TXPin);
-  ss.begin(GPSBaud);
+ // ss.begin(GPSBaud);
   pinMode(buttonPin, INPUT);
   Serial.begin(9600);
   Serial.println(F("AT+DMOSETGROUP=0,144.8000,144.8000,0000,0,0000"));
@@ -117,9 +117,9 @@ void loop(){
     }
   }
 
-  while (ss.available() > 0)
+  while (Serial.available() > 0)
   {
-    gps.encode(ss.read());
+    gps.encode(Serial.read());
   }
 
   if ( gps.time.isUpdated() )
@@ -195,7 +195,7 @@ void loop(){
 //      {
 
 
-  tft.fillScreen(ILI9341_BLACK);
+ // tft.fillScreen(ILI9341_BLACK);
 
   tft.setCursor(0,0);
   tft.print("Time: ");
@@ -246,11 +246,15 @@ void loop(){
   }
   else
   {
-  //tft.fillScreen(ILI9341_BLACK);
+ // tft.fillScreen(ILI9341_BLACK);
 
-  tft.setCursor(0,0);
+
+
+//  tft.setCursor(0,0);
+
 //  tft.setTextColor(ILI9341_GREEN);
 //  tft.print("              ");
+
   tft.setTextColor(0xFFFF,0x0000);
   tft.setCursor(0,0);
   tft.print("Time: ");
@@ -262,8 +266,8 @@ void loop(){
 //      u8g.setPrintPos(0, 12);
       printTime();
 //      u8g.setPrintPos(60, 12);
-        tft.print("Volts: ");
-       // tft.println(result1);
+//        tft.print("Volts: ");
+  //      tft.println(result1);
         tft.print("SAT's: ");
         tft.println(gps.satellites.value());
         
@@ -273,7 +277,7 @@ void loop(){
 //      u8g.print(F("SAT's: "));
 //      u8g.print(gps.satellites.value());
 //      u8g.setPrintPos(60, 24);
-        tft.print("Km/H");
+        tft.print("Km/H ");
         tft.println(gps.speed.kmph(),2);
      // u8g.print(gps.speed.kmph(), 2);
      // u8g.print(F(" Km/H"));
@@ -307,8 +311,8 @@ void loop(){
   ////////////////////////////////////////////////////////////////////////////////////
 
   // Only check the below if locked satellites > 3
-  if ( gps.satellites.value() >= 3 && (millis() - lastTx) > 15000 && gps.hdop.value() < 500 )
-  {
+  //if ( gps.satellites.value() >= 3 && (millis() - lastTx) > 15000 && gps.hdop.value() < 500 )
+  //{
     // Check for heading between 70 and 95degrees in more than 50m and previousHeading is defined (for left or right turn)
     if ( headingDelta > 70 && headingDelta < 95 && lastheadingDelta > 50 && lastTxdistance > 50 && previousHeading != 400)
     {
@@ -328,11 +332,11 @@ void loop(){
       TxtoRadio();
     }
 
-    else if ( (millis() - lastTx) > 900000) // every 15 minutes
+    else if ( (millis() - lastTx) > 10000) // every 15 minutes 900000
     {
       TxtoRadio();
     } // endif of check for lastTx > txInterval
-  } // Endif check for satellites
+  //} // Endif check for satellites
 
   
   
@@ -363,6 +367,9 @@ void loop(){
 
 void TxtoRadio()
 {
+    
+    Serial.println("DATAA!");
+    
     char latOut[15], lngOutTmp[15];
     float latDegMin, lngDegMin = 0.0;
     latDegMin = convertDegMin(gps.location.lat());
@@ -431,6 +438,10 @@ float convertDegMin(float decDeg)
 
 static void printTime()
 {
+
+ //Serial.println(gps.satellites.value());
+ 
+ 
   if (hour < 10)
 
  // Serial.println(hour);
@@ -458,5 +469,5 @@ static void printTime()
   if (second < 10)
     u8g.print(F("0"));
   u8g.print(second);
-*/  
-}
+*/ 
+} 
